@@ -7,7 +7,7 @@
  * @todo parse default language attributes for the video embed
  */
 define('EMVIDEO_TED_MAIN_URL', 'http://ted.com/');
-
+define('EMVIDEO_TED_PLAYER_URL', 'http://video.ted.com/assets/player/swf/EmbedPlayer.swf');
 /**
  *  This is the URL to the API of your provider, if this exists.
  */
@@ -133,7 +133,7 @@ function emvideo_ted_extract($parse = '') {
  */
 	
   return array(
-    '@\=\"([^\"]+)\"@i',
+    '@\"vu=([^\"]+)\"@i',
   );
 }
 
@@ -163,7 +163,7 @@ function emvideo_ted_data($field, $item) {
   // Gather info about the item's raw flash video.
   // RSS / MRSS feeds with the item would have enough info.
   // Alternatively try getting the minimum from an HTTP get.
-  $url = 'http://video.ted.com/assets/player/swf/EmbedPlayer.swf?'. $item['value'];
+  $url = 'http://video.ted.com/assets/player/swf/EmbedPlayer.swf?vu='. $item['value'];
   
   $response = emfield_request_header('dotsub', $url);
   
@@ -212,18 +212,23 @@ function theme_emvideo_ted_flash($item, $width, $height, $autoplay) {
   $output = '';
   if ($item['embed']) {
     
-    $embed_url = isset($item['data']['flash']['url']) ? $item['data']['flash']['url'] : 'http://video.ted.com/assets/player/swf/EmbedPlayer.swf?' . $item['value'];
+    $vars = $item['value'];
+  	$embed_url = isset($item['data']['flash']['url']) ? $item['data']['flash']['url'] : 'http://video.ted.com/assets/player/swf/EmbedPlayer.swf?vu=' . $vars;
     
     $autoplay = $autoplay ? 'true' : 'false';
     $fullscreen = variable_get('emvideo_ted_full_screen', 1) ? 'true' : 'false';
     
-    $output = '<object width="'. $width .'" height="'. $height .'">';
-    $output .= '<param name="movie" value="'. $embed_url .'&type=video&lang=eng">';
-    $output .= '<param name="allowFullScreen" value="'. $fullscreen .'" />';
-    $output .= '<param name="allowscriptaccess" value="always"></param>';
-    $output .= "<param name=\"flashVars\" value=\"{$item['value']}\"></param>";
-    $output .= '<embed src="'. $embed_url .'" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="'. $fullscreen .'"  width="'. $width .'" height="'. $height .'"></embed>';
-    $output .= '</object>';
+    $output = <<<EOD
+<object width="$width" height="$height">
+  <param name="movie" value="{EMVIDEO_TED_PLAYER_URL}"></param>
+  <param name="allowFullScreen" value="$fullscreen" />
+  <param name="allowScriptAccess" value="always"/>
+  <param name="wmode" value="transparent"></param>
+  <param name="bgColor" value="#ffffff"></param>
+  <param name="flashvars" value="$vars" />
+  <embed src="{EMVIDEO_TED_PLAYER_URL}" pluginspace="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" wmode="transparent" bgColor="#ffffff" width="$width" height="$height" allowFullScreen="$fullscreen" allowScriptAccess="always" flashvars="$vars"></embed>
+</object>
+EOD;
   }
   return $output;
 }
