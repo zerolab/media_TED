@@ -124,7 +124,7 @@ function emvideo_ted_extract($embed = '') {
 //*/
 	
 	if ($embed && preg_match('@\[ted id=([0-9]+)\]@i', $embed, $matches)) {
-		$result = drupal_http_request(EMVIDEO_TED_ID_EMBED_UR . $matches[1]);
+		$result = drupal_http_request(EMVIDEO_TED_ID_EMBED_URL . $matches[1]);
 		if ($result->code == 200)
 		  $embed = $result->data;
 	}
