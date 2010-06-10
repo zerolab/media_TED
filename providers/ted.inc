@@ -8,6 +8,7 @@
  */
 define('EMVIDEO_TED_MAIN_URL', 'http://ted.com/');
 define('EMVIDEO_TED_PLAYER_URL', 'http://video.ted.com/assets/player/swf/EmbedPlayer.swf');
+define('EMVIDEO_TED_ID_EMBED_URL'. 'http://www.ted.com/talks/embed/id/');
 /**
  *  This is the URL to the API of your provider, if this exists.
  */
@@ -106,10 +107,11 @@ function emvideo_ted_settings() {
  *    array. Otherwise, the calling function will handle testing the embed code
  *    against each regex string in the returned array.
  */
-function emvideo_ted_extract($parse = '') {
+function emvideo_ted_extract($embed = '') {
   // Here we assume that a URL will be passed in the form of
   // a TED.com embed code
-/*
+/*/
+ [ted id=319] --> http://www.ted.com/talks/embed/id/319
 <!--copy and paste-->
 <object width="446" height="326">
   <param name="movie" value="http://video.ted.com/assets/player/swf/EmbedPlayer.swf"></param>
@@ -119,22 +121,19 @@ function emvideo_ted_extract($parse = '') {
   <param name="bgColor" value="#ffffff"></param>
   <param name="flashvars" value="vu=http://video.ted.com/talks/dynamic/EvanWilliams_2009-medium.flv&su=http://images.ted.com/images/ted/tedindex/embed-posters/EvanWilliams-2009.embed_thumbnail.jpg&vw=432&vh=240&ap=0&ti=473&introDuration=15330&adDuration=4000&postAdDuration=830&adKeys=talk=evan_williams_on_listening_to_twitter_users;year=2009;theme=speaking_at_ted2009;theme=tales_of_invention;theme=what_s_next_in_tech;theme=words_about_words;theme=not_business_as_usual;event=TED2009;&preAdTag=tconf.ted/embed;tile=1;sz=512x288;" />
   <embed src="http://video.ted.com/assets/player/swf/EmbedPlayer.swf" pluginspace="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" wmode="transparent" bgColor="#ffffff" width="446" height="326" allowFullScreen="true" allowScriptAccess="always" flashvars="vu=http://video.ted.com/talks/dynamic/EvanWilliams_2009-medium.flv&su=http://images.ted.com/images/ted/tedindex/embed-posters/EvanWilliams-2009.embed_thumbnail.jpg&vw=432&vh=240&ap=0&ti=473&introDuration=15330&adDuration=4000&postAdDuration=830&adKeys=talk=evan_williams_on_listening_to_twitter_users;year=2009;theme=speaking_at_ted2009;theme=tales_of_invention;theme=what_s_next_in_tech;theme=words_about_words;theme=not_business_as_usual;event=TED2009;"></embed></object>
- 
- vu=http://video.ted.com/talks/dynamic/EvanWilliams_2009-medium.flv
- 
- &su=http://images.ted.com/images/ted/tedindex/embed-posters/EvanWilliams-2009.embed_thumbnail.jpg
- &vw=432&vh=240
- &ap=0
- &ti=473
- &introDuration=15330
- &adDuration=4000
- &postAdDuration=830
- &adKeys=talk=evan_williams_on_listening_to_twitter_users;year=2009;theme=speaking_at_ted2009;theme=tales_of_invention;theme=what_s_next_in_tech;theme=words_about_words;theme=not_business_as_usual;event=TED2009;
- */
+//*/
 	
-  return array(
-    '@\"vu=([^\"]+)\"@i',
-  );
+	if ($embed && preg_match('@\[ted id=\"([0*9]+)\"\]@i', $embed, $matches)) {
+		$result = drupal_http_request(EMVIDEO_TED_ID_EMBED_UR . $matches[1]);
+		if ($result->code == 200)
+		  $embed = $result->data;
+	}
+	
+	if ($embed && preg_match('@\"vu=([^\"]+)\"@i', $embed, $matches)) {
+		return 'vu=' . $matches[1];
+	}
+  
+  return FALSE;
 }
 
 /**
@@ -212,7 +211,7 @@ function theme_emvideo_ted_flash($item, $width, $height, $autoplay) {
   $output = '';
   if ($item['embed']) {
     
-    $vars = 'vu=' . $item['value'];
+    $vars = $item['value'];
     //TODO remove redundant(?) $embed_url
   	$embed_url = isset($item['data']['flash']['url']) ? $item['data']['flash']['url'] : EMVIDEO_TED_PLAYER_URL . $vars;
   	$movie_url = EMVIDEO_TED_PLAYER_URL;
