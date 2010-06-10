@@ -201,7 +201,7 @@ function emvideo_ted_rss($item, $teaser = NULL) {
  */
 function emvideo_ted_embedded_link($video_code) {
 //http://dotsub.com/view/...  
-  return 'http://dotsub.com/view/'. $video_code;
+  return 'http://ted.com'. $video_code;
 }
 
 /**
