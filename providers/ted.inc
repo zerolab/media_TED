@@ -8,7 +8,7 @@
  */
 define('EMVIDEO_TED_MAIN_URL', 'http://ted.com/');
 define('EMVIDEO_TED_PLAYER_URL', 'http://video.ted.com/assets/player/swf/EmbedPlayer.swf');
-define('EMVIDEO_TED_ID_EMBED_URL'. 'http://www.ted.com/talks/embed/id/');
+define('EMVIDEO_TED_ID_EMBED_URL', 'http://www.ted.com/talks/embed/id/');
 /**
  *  This is the URL to the API of your provider, if this exists.
  */
@@ -123,7 +123,7 @@ function emvideo_ted_extract($embed = '') {
   <embed src="http://video.ted.com/assets/player/swf/EmbedPlayer.swf" pluginspace="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" wmode="transparent" bgColor="#ffffff" width="446" height="326" allowFullScreen="true" allowScriptAccess="always" flashvars="vu=http://video.ted.com/talks/dynamic/EvanWilliams_2009-medium.flv&su=http://images.ted.com/images/ted/tedindex/embed-posters/EvanWilliams-2009.embed_thumbnail.jpg&vw=432&vh=240&ap=0&ti=473&introDuration=15330&adDuration=4000&postAdDuration=830&adKeys=talk=evan_williams_on_listening_to_twitter_users;year=2009;theme=speaking_at_ted2009;theme=tales_of_invention;theme=what_s_next_in_tech;theme=words_about_words;theme=not_business_as_usual;event=TED2009;"></embed></object>
 //*/
 	
-	if ($embed && preg_match('@\[ted id=([0*9]+)\]@i', $embed, $matches)) {
+	if ($embed && preg_match('@\[ted id=([0-9]+)\]@i', $embed, $matches)) {
 		$result = drupal_http_request(EMVIDEO_TED_ID_EMBED_UR . $matches[1]);
 		if ($result->code == 200)
 		  $embed = $result->data;
