@@ -1,0 +1,6 @@
+; $Id$
+name = Media: TED
+description = Embedded Media Field provider for http://ted.com
+core = 6.x
+dependencies[] = emvideo
+package = Media

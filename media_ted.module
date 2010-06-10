@@ -1,0 +1,13 @@
+<?php 
+// $Id$
+
+/**
+ *  @file
+ *  Embedded Video Field provider for TED.com
+ */
+
+function media_dotsub_emfield_providers($module, $provider = NULL) {
+  if ($module == 'emvideo') {      
+    return drupal_system_listing("$provider\.inc$", drupal_get_path('module', 'media_ted') ."/providers", 'name', 0);
+  }
+}
