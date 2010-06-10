@@ -108,8 +108,7 @@ function emvideo_ted_settings() {
  */
 function emvideo_ted_extract($parse = '') {
   // Here we assume that a URL will be passed in the form of
-  // http://dotsub.com/view/730d7b48-532a-4ec2-a0c6-ba0ac47d611
-  // or embed code in the form of <embed src="http://dotsub.com/static/players/portalplayer.swf?plugins=dotsub&uuid=730d7b48-532a-4ec2-a0c6-ba0ac47d6116&type=video&lang=eng"
+  // a TED.com embed code
 /*
 <!--copy and paste-->
 <object width="446" height="326">
@@ -134,8 +133,7 @@ function emvideo_ted_extract($parse = '') {
  */
 	
   return array(
-    '@dotsub\.com/view/([^"]+)@i', 
-    '@dotsub\.com/static/players/portalplayer.swf?plugins=dotsub&uuid=([^\?]+)@i',
+    '@\=\"([^\"]+)\"@i',
   );
 }
 
