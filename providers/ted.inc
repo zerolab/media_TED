@@ -212,21 +212,23 @@ function theme_emvideo_ted_flash($item, $width, $height, $autoplay) {
   $output = '';
   if ($item['embed']) {
     
-    $vars = $item['value'];
-  	$embed_url = isset($item['data']['flash']['url']) ? $item['data']['flash']['url'] : 'http://video.ted.com/assets/player/swf/EmbedPlayer.swf?vu=' . $vars;
+    $vars = 'vu=' . $item['value'];
+    //TODO remove redundant(?) $embed_url
+  	$embed_url = isset($item['data']['flash']['url']) ? $item['data']['flash']['url'] : EMVIDEO_TED_PLAYER_URL . $vars;
+  	$movie_url = EMVIDEO_TED_PLAYER_URL;
     
     $autoplay = $autoplay ? 'true' : 'false';
     $fullscreen = variable_get('emvideo_ted_full_screen', 1) ? 'true' : 'false';
     
     $output = <<<EOD
 <object width="$width" height="$height">
-  <param name="movie" value="{EMVIDEO_TED_PLAYER_URL}"></param>
+  <param name="movie" value="$movie_url"></param>
   <param name="allowFullScreen" value="$fullscreen" />
   <param name="allowScriptAccess" value="always"/>
   <param name="wmode" value="transparent"></param>
   <param name="bgColor" value="#ffffff"></param>
   <param name="flashvars" value="$vars" />
-  <embed src="{EMVIDEO_TED_PLAYER_URL}" pluginspace="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" wmode="transparent" bgColor="#ffffff" width="$width" height="$height" allowFullScreen="$fullscreen" allowScriptAccess="always" flashvars="$vars"></embed>
+  <embed src="$movie_url" pluginspace="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" wmode="transparent" bgColor="#ffffff" width="$width" height="$height" allowFullScreen="$fullscreen" allowScriptAccess="always" flashvars="$vars"></embed>
 </object>
 EOD;
   }
