@@ -8,7 +8,7 @@
  */
 define('EMVIDEO_TED_MAIN_URL', 'http://ted.com/');
 define('EMVIDEO_TED_PLAYER_URL', 'http://video.ted.com/assets/player/swf/EmbedPlayer.swf');
-define('EMVIDEO_TED_ID_EMBED_URL', 'http://www.ted.com/talks/embed/id/');
+define('EMVIDEO_TED_ID_EMBED_URL'. 'http://www.ted.com/talks/embed/id/');
 /**
  *  This is the URL to the API of your provider, if this exists.
  */
