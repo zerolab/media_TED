@@ -219,8 +219,16 @@ function theme_emvideo_ted_flash($item, $width, $height, $autoplay) {
     $autoplay = $autoplay ? 'true' : 'false';
     $fullscreen = variable_get('emvideo_ted_full_screen', 1) ? 'true' : 'false';
     
+    
+    // Let's resize properly and account for smaller player sizes
+    $w = round($width * 0.975);
+    $h = $height - 85;
+    $vars = preg_replace('/sz=[0-9]{2,4}x[0-9]{2-4};/', "sz={$w}x{$h};", $vars);
+    $vars = preg_replace('/vw=[0-9]{2,4}/', "vw=$w", $vars);
+    $vars = preg_replace('/vh=[0-9]{2,4}/', "vh=$h", $vars);
+    
     $output = <<<EOD
-<object width="$width" height="$height">
+<object width="$w" height="$height">
   <param name="movie" value="$movie_url"></param>
   <param name="allowFullScreen" value="$fullscreen" />
   <param name="allowScriptAccess" value="always"/>
